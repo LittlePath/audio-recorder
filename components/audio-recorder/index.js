@@ -9,13 +9,20 @@ window.customElements.define('audio-recorder',
       shadowRoot.appendChild(this.style);
       shadowRoot.appendChild(this.content);
       
-      let recordButton = this.shadowRoot.querySelector('#record-button');
-      recordButton.addEventListener('click', (event) => this.recordClickHandler(event) );
+      let startStopButton = this.shadowRoot.querySelector('#start-stop');
+      startStopButton.addEventListener('click', (event) => this.startStopClickHandler(event) );
+
+      this.audioChunks = [];
+      this.mimeType = 'audio/aac';
+      this.isRecording = false;
    }
 
     get style(){
       let style = document.createElement('style');
       style.innerHTML = `
+        .stop{
+          background-color: red;
+        }
       `;
       return style;
     }
@@ -24,12 +31,25 @@ window.customElements.define('audio-recorder',
       let content = document.createElement('div');
       content.innerHTML = `
       <audio id="audio-recorder" ></audio>
-      <button id="record-button">Start Recording</button>
+      <button id="start-stop">Start Recording</button>
       `;
       return content;
     }
 
-    recordClickHandler(event){
+    startStopClickHandler(event){
+      if(this.isRecording){
+        this.stop();
+      }else{
+        this.start();
+      }
+    }
+
+    start(){
+      let startStopButton = this.shadowRoot.querySelector('#start-stop');
+      startStopButton.innerHTML = 'Stop Recording';
+      startStopButton.classList.add('stop');
+      this.isRecording = true;
+
       this.mediaSource = new MediaSource();
       this.mediaSource.addEventListener('sourceopen', (event) => this.sourceOpenHandler(event));
       this.sourceBuffer = undefined;
@@ -49,8 +69,16 @@ window.customElements.define('audio-recorder',
         });
     }
 
-    sourceOpenHandler(event){
+    stop(){
+      let startStopButton = this.shadowRoot.querySelector('#start-stop');
+      startStopButton.innerHTML = 'Start Recording';
+      startStopButton.classList.remove('stop');
+      this.isRecording = false;
     }
 
+    sourceOpenHandler(event){
+    }
   }
+
+
 );
