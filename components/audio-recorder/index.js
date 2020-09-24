@@ -63,7 +63,7 @@ window.customElements.define('audio-recorder',
       // .wav  audio/wav
       // .weba audio/webm
       const options = {
-        type: 'audio/webm'
+        type: 'audio/ogg'
       }
         
       navigator.mediaDevices.getUserMedia(constraints)
@@ -99,7 +99,7 @@ window.customElements.define('audio-recorder',
 
       let a = document.createElement('a');
       a.setAttribute('href', blobUrl);
-      a.setAttribute('download', `recording-${new Date().toISOString()}.mp3`);
+      a.setAttribute('download', `recording-${new Date().toISOString()}.oga`);
       a.innerText = 'Download';
       this.shadowRoot.append(a);
     }
