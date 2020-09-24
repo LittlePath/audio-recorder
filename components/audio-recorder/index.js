@@ -55,13 +55,20 @@ window.customElements.define('audio-recorder',
         video: false
       };
 
+
+      // .aac  audio/aac
+      // .mp3  audio/mpeg
+      // .oga  audio/ogg
+      // .opus audio/opus
+      // .wav  audio/wav
+      // .weba audio/webm
       const options = {
-        type: 'audio/aac'
+        type: 'audio/webm'
       }
         
       navigator.mediaDevices.getUserMedia(constraints)
         .then( (stream) => {
-          this.mediaRecorder = new MediaRecorder(stream, options);
+          this.mediaRecorder = new MediaRecorder(stream);
           this.mediaRecorder.addEventListener('dataavailable', (event) => {
             audioChunks.push(event.data);
           });
@@ -89,6 +96,12 @@ window.customElements.define('audio-recorder',
       audio.setAttribute('src', blobUrl);
       audio.setAttribute('controls', '');
       this.shadowRoot.append(audio);
+
+      let a = document.createElement('a');
+      a.setAttribute('href', blobUrl);
+      a.setAttribute('download', `recording-${new Date().toISOString()}.mp3`);
+      a.innerText = 'Download';
+      this.shadowRoot.append(a);
     }
 
 
