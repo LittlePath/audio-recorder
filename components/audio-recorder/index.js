@@ -9,12 +9,17 @@ window.customElements.define('audio-recorder',
       shadowRoot.appendChild(this.style);
       shadowRoot.appendChild(this.content);
       
-      let startStopButton = this.shadowRoot.querySelector('#start-stop');
-      startStopButton.addEventListener('click', (event) => this.startStopClickHandler(event) );
-
       this.mediaRecorder = undefined;
-      this.isRecording = false;
-   }
+
+      let startStopButton = this.shadowRoot.querySelector('#start-stop');
+      startStopButton.addEventListener('click', (event) => {
+        if(this.mediaRecorder && this.mediaRecorder.state === 'recording'){
+          this.stop();
+        }else{
+          this.start();
+        }
+      });
+    }
 
     get style(){
       let style = document.createElement('style');
@@ -34,19 +39,10 @@ window.customElements.define('audio-recorder',
       return content;
     }
 
-    startStopClickHandler(event){
-      if(this.isRecording){
-        this.stop();
-      }else{
-        this.start();
-      }
-    }
-
     start(){
       let startStopButton = this.shadowRoot.querySelector('#start-stop');
       startStopButton.innerHTML = 'Stop Recording';
       startStopButton.classList.add('stop');
-      this.isRecording = true;
 
       let audioChunks = [];
 
@@ -54,7 +50,6 @@ window.customElements.define('audio-recorder',
         audio: true,
         video: false
       };
-
 
       // .aac  audio/aac
       // .mp3  audio/mpeg
@@ -87,7 +82,6 @@ window.customElements.define('audio-recorder',
       startStopButton.innerHTML = 'Start Recording';
       startStopButton.classList.remove('stop');
       this.mediaRecorder.stop();
-      this.isRecording = false;
     }
 
     saveRecording(audioBlob){
@@ -103,9 +97,5 @@ window.customElements.define('audio-recorder',
       a.innerText = 'Download';
       this.shadowRoot.append(a);
     }
-
-
   }
-
-
 );
